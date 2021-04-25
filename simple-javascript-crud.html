@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<style>
+		table {margin-top: 20px}
+		.width-51 {width: 51%;}
+	</style>
+<head>
+	<title>Simple JavaScript CRUD Operation</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script>
+		let finalList = []
+
+		function display(finalList) {
+			let TableItems = ''
+			if (finalList.length === 0) {
+				document.getElementById("table").innerHTML = ''
+			} else {
+				finalList.forEach((listItems) => {
+					TableItems += '<tr>'
+					TableItems += `<td class="width-51">${listItems}</td>`
+					TableItems += `<td><button class="btn btn-primary" onclick="edit('${listItems}')">Edit <i class="fa fa-edit"></i></button>`
+					TableItems += `&nbsp;<button class="btn btn-danger" onclick="remove('${listItems}')">Trash <i class="fa fa-trash"></i></button>`
+					TableItems += '</td>'
+					TableItems += '</tr>'
+					document.getElementById("table").innerHTML = TableItems
+				})
+			}
+		}
+
+		function insert() {
+			boxvalue = document.getElementById('box').value;
+			if (boxvalue === '') {
+				alert('Input cannot be empty')
+			} else {
+				finalList.push(boxvalue)
+				document.getElementById('box').value = ''
+				display(finalList)
+			}
+		}
+
+		function remove(items) {
+			finalList.forEach((listItems, index) => {
+				if (finalList[index] == items) {
+					finalList.splice(index, 1)
+				}
+			})
+			display(finalList)
+		}
+
+		function edit(items) {
+			document.getElementById('box').value = items
+			document.getElementById('hidden_edit_value').value = items
+			document.getElementById("insert_data").style.display = "none"
+			document.getElementById("update_data").style.display = "inline-block"
+		}
+
+		function updateList() {
+			let hiddenData = document.getElementById('hidden_edit_value').value
+			let update_data = document.getElementById('box').value
+			if (update_data.length === 0) {
+				alert('Input field cannot be empty !')
+				document.getElementById('box').value = hiddenData
+			} else {
+				finalList.forEach((listItems, index) => {
+					if (finalList[index] == hiddenData) {
+						finalList[index] = update_data
+					}
+				})
+				document.getElementById("insert_data").style.display = "inline-block"
+				document.getElementById("update_data").style.display = "none"
+				boxvalue = document.getElementById('box').value = ''
+				display(finalList)
+			}
+		}
+	</script>
+</head>
+<body>
+	<div class="jumbotron text-center">
+		<h1>Simple JavaScript CRUD Operation</h1>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+			  <input type="text" class="form-control" placeholder="Enter items here" id="box" autocomplete="off" />
+			</div>
+			<div class="col">
+				<button class="btn btn-primary" onclick="insert()" id='insert_data'>Add New Record <i class="fa fa-plus"></i></button>
+				<button class="btn btn-primary" onclick="updateList()" id='update_data' style='display:none'>Update Record <i class="fa fa-edit"></i></button>
+				<input type='hidden' name='hidden_edit_value' id='hidden_edit_value' />
+			</div>
+		</div>
+		<table class="table table-borderless" id="table"></table>
+	</div>
+</body>
+</html>
